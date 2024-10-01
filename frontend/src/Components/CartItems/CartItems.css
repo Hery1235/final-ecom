@@ -1,0 +1,101 @@
+.cartitems{
+    margin: 100px 80px;
+}
+.cartitems hr{
+    height: 3px;
+    background: #e2e2e2;
+    border: 0;
+}
+.cartitem-format-main{
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0px;
+    color: #454545;
+    font-size: 18px;
+    font-weight: 600;
+}
+.cartitems-format{
+    font-size: 17px;
+    font-weight: 500;
+}
+.carticon-product-icon{
+    height: 62px;
+}
+.carticon-remove-item{
+    width: 15px;
+    cursor: pointer;
+    margin: 0px 40px;
+    color: #454545;
+}
+.cartitems-quantity{
+    height: 50px;
+    width: 50px;
+    border: 2px solid #e2e2e2;
+    background: white;
+}
+.cartitems-down{
+    display: flex;
+    margin: 80px 0px;
+    gap: 300px;
+  
+}
+.cartitems-total{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.cartitems-total-item{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0px;
+}
+.cartitems-total button{
+    width: 200px;
+    height: 40px;
+    outline: none;
+    border: none;
+    background: #ff5a5a;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.cartitems-promocode{
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+}
+.cartitems-promocode p{
+    color: #555;
+}
+.cartitems-promobox {
+    width: 500px; /* Make sure this is sufficient to contain both input and button */
+    margin-top: 15px;
+    padding-left: 20px;
+    height: 58px;
+    background: #eaeaea;
+    display: flex; /* Ensure the container is a flex container */
+    align-items: center; /* Center items vertically */
+}
+
+.cartitems-promobox input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    width: 330px; /* Adjust width if necessary */
+    height: 50px;
+}
+
+.cartitems-promobox button {
+    width: 170px; /* Adjust width if necessary */
+    height: 100%; /* Ensure height is consistent with input */
+    font-size: 16px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px; /* Adds space between input and button */
+}
