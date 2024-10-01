@@ -39,6 +39,8 @@ const ShopContextProvider = (props) => {
         });
 
         const cartData = await cartResponse.json();
+        getTotalCartItems();
+        getTototalAmount();
         setCartItems(cartData.cartData || {});
       }
     } catch (error) {
@@ -54,12 +56,14 @@ const ShopContextProvider = (props) => {
       return;
     }
 
-    if (localStorage.getItem("auth-token")) {
+    const authToken = localStorage.getItem("auth-token");
+    debugger;
+    if (authToken) {
       fetch("http://localhost:4000/addtocart", {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "auth-token": localStorage.getItem("auth-token"),
+          "auth-token": authToken,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ productId: itemID, size: selectedSize }),
@@ -68,6 +72,7 @@ const ShopContextProvider = (props) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
+          fetchCartItems();
           return response.json();
         })
         .then((data) => {
@@ -134,6 +139,7 @@ const ShopContextProvider = (props) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
+          fetchCartItems();
           return response.json();
         })
         .then((data) => {
@@ -146,6 +152,10 @@ const ShopContextProvider = (props) => {
   };
 
   const getTototalAmount = async () => {
+    if (!cartItems?.length) {
+      return 0;
+    }
+
     let totalAmount = 0;
     let totalItems = 0;
 
@@ -183,6 +193,10 @@ const ShopContextProvider = (props) => {
   };
 
   const getTotalCartItems = () => {
+    if (!cartItems?.length) {
+      return 0;
+    }
+
     let totalItems = 0;
 
     for (let index = 0; index < cartItems.length; index++) {

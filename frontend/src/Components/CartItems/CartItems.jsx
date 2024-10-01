@@ -21,6 +21,7 @@ const CartItems = () => {
   const fetchTotalAmount = async () => {
     try {
       const amount = await getTototalAmount(); // Wait for the async function to resolve
+
       setTotalAmount(amount); // Update the state with the resolved value
     } catch (error) {
       console.error("Error fetching total amount:", error);
@@ -30,7 +31,7 @@ const CartItems = () => {
   // Use useEffect to fetch total amount when component mounts
   useEffect(() => {
     fetchTotalAmount();
-  }, []);
+  }, [cartItems]);
 
   if (loading) {
     return <div>Loading...</div>;

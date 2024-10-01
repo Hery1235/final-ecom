@@ -233,7 +233,8 @@ app.post("/signup", async (req, res) => {
         id: user.id,
       },
     };
-    const token = jwt.sign(data, "secret_icon"); // Replace 'secret_icon' with your secret
+
+    const token = jwt.sign(data, "secret_ecom"); // Replace 'secret_icon' with your secret
 
     // Send response
     res.json({ success: true, token });
@@ -332,8 +333,8 @@ app.post("/addtocart", fetchUser, async (req, res) => {
     }
 
     // Check if the product is already in the cart
-    const existingProduct = userData.cartData.find(
-      (item) => item.productId === productId
+    const existingProduct = userData.cartData?.find(
+      (item) => item?.productId === productId
     );
     if (existingProduct) {
       // If the product exists, increment the quantity for the specified size
@@ -393,7 +394,7 @@ app.post("/removefromcart", fetchUser, async (req, res) => {
       const cartItem = cartData[index];
 
       // Check if the productId matches the item you want to update
-      if (cartItem.productId === productId) {
+      if (cartItem?.productId === productId) {
         // Decrease the quantity of the specific size by 1
         cartItem[size] = Math.max(0, cartItem[size] - 1);
 
@@ -413,6 +414,8 @@ app.post("/removefromcart", fetchUser, async (req, res) => {
         }
       }
     });
+
+    cartData?.filter((item) => item);
 
     // Save the updated cartData to the database
     await Users.findOneAndUpdate(
@@ -441,12 +444,14 @@ app.post("/getcart", fetchUser, async (req, res) => {
     if (!userData) {
       return res.status(404).send("User not found");
     }
-
     // Convert cartData (if it's a Map) back to an object for the response
-    const cartData =
+    let cartData =
       userData.cartData instanceof Map
         ? Object.fromEntries(userData.cartData)
         : userData.cartData;
+
+    // remove null values
+    cartData = cartData?.filter((item) => item);
 
     // Return the cart data to the client
 
