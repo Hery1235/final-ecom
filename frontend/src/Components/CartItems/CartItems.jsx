@@ -54,8 +54,8 @@ const CartItems = () => {
       <div className="cartitem-format-main">
         <p>Products</p>
         <p>Title</p>
-        <p>Size</p>
         <p>Price</p>
+        <p>Size</p>
         <p>Quantity</p>
         <p>Total</p>
         <p>Remove</p>
@@ -87,15 +87,17 @@ const CartItems = () => {
             if (quantity > 0) {
               return (
                 <div key={`${productId}-${size}-${index}`}>
-                  <div className="cartitems-format cartitem-format-main">
+                  <div className=" displayfor-bigscreeen cartitems-format cartitem-format-main">
                     <img
                       className="carticon-product-icon"
                       src={product.image}
                       alt={product.name}
                     />
+
                     <p>{product.name}</p>
-                    <p>{size}</p>
+
                     <p>${product.new_price.toFixed(2)}</p>
+                    <p>{size}</p>
                     <button className="cartitems-quantity">{quantity}</button>
                     <p>${(product.new_price * quantity).toFixed(2)}</p>
                     <img
@@ -104,6 +106,45 @@ const CartItems = () => {
                       onClick={() => removeFromCart(productId, size)}
                       alt="Remove item"
                     />
+                  </div>
+
+                  <div key={`${productId}-${size}-${index}`}>
+                    <div className="displayfor-smallscreen">
+                      <div className="main-image">
+                        <img
+                          className="carticon-product-icon"
+                          src={product.image}
+                          alt={product.name}
+                        />
+                      </div>
+
+                      <div className="product-details">
+                        <div className="name-price">
+                          <p>{product.name}</p>
+                          <p>${product.new_price.toFixed(2)}</p>
+                        </div>
+                        <div className="size-quantity-totalprice">
+                          <p>{size}</p>
+                          <div className="mulandequalsign">*</div>
+                          <button className="cartitems-quantity">
+                            {quantity}
+                          </button>
+                          <div className="mulandequalsign">=</div>
+                          <p>${(product.new_price * quantity).toFixed(2)}</p>
+                        </div>
+
+                        <div className="removeicon-container">
+                          <img
+                            className="carticon-remove-item"
+                            src={remove_icon}
+                            onClick={() => removeFromCart(productId, size)}
+                            alt="Remove item"
+                          />
+                        </div>
+                      </div>
+
+                      <hr />
+                    </div>
                   </div>
                   <hr />
                 </div>
@@ -143,13 +184,6 @@ const CartItems = () => {
           >
             <CheckoutButton />
           </PayPalScriptProvider>
-        </div>
-        <div className="cartitems-promocode">
-          <p>If you have a promo code enter it here</p>
-          <div className="cartitems-promobox">
-            <input placeholder="Promo Code" type="text" />
-            <button>Submit</button>
-          </div>
         </div>
       </div>
     </div>

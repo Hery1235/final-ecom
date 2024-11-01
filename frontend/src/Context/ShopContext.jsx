@@ -4,7 +4,6 @@ export const ShopContext = createContext(null);
 
 const getDefaultCart = () => {
   let cart = {};
-
   return cart;
 };
 
@@ -12,10 +11,19 @@ const ShopContextProvider = (props) => {
   const [all_product, setAllProduct] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
   const [loading, setLoading] = useState(true);
+  const [slideshow, setSlideSHow] = useState([]);
 
   useEffect(() => {
     fetchCartItems();
+    fetchslideshow();
   }, []);
+
+  const fetchslideshow = async () => {
+    const resonce = await fetch("http://localhost:4000/allslideshow");
+    const slideshowdata = await resonce.json();
+
+    setSlideSHow(slideshowdata);
+  };
 
   const fetchCartItems = async () => {
     try {
@@ -39,9 +47,10 @@ const ShopContextProvider = (props) => {
         });
 
         const cartData = await cartResponse.json();
+
         getTotalCartItems();
         getTototalAmount();
-        setCartItems(cartData.cartData || {});
+        setCartItems(cartData || {});
       }
     } catch (error) {
       console.error("Error fetching cart data:", error);
@@ -57,7 +66,7 @@ const ShopContextProvider = (props) => {
     }
 
     const authToken = localStorage.getItem("auth-token");
-    debugger;
+
     if (authToken) {
       fetch("http://localhost:4000/addtocart", {
         method: "POST",
@@ -152,44 +161,28 @@ const ShopContextProvider = (props) => {
   };
 
   const getTototalAmount = async () => {
-    if (!cartItems?.length) {
-      return 0;
-    }
+    try {
+      const response = await fetch("http://localhost:4000/gettotalamount", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "auth-token": localStorage.getItem("auth-token"),
+          "Content-Type": "application/json",
+        },
+      });
 
-    let totalAmount = 0;
-    let totalItems = 0;
-
-    for (let index = 0; index < cartItems.length; index++) {
-      const productId = await cartItems[index].productId;
-
-      totalItems =
-        totalItems +
-        cartItems[index].S +
-        cartItems[index].M +
-        cartItems[index].L +
-        cartItems[index].XL +
-        cartItems[index].XXL;
-
-      try {
-        const response = await fetch(
-          `http://localhost:4000/allproducts/${productId}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-
-        const productData = await response.json();
-        let price = totalItems * productData.new_price;
-        totalAmount = totalAmount + price;
-
-        // return productData;
-      } catch (error) {
-        console.error("Error fetching product:", error);
+      if (response.ok) {
+        const data = await response.json(); // Parse the JSON response
+        console.log("Total Amount Data: ", data);
+        return data; // Return the data
+      } else {
+        console.error("Failed to fetch total amount, status:", response.status);
+        return null; // Return null if there's an error
       }
+    } catch (error) {
+      console.error("Error fetching total amount:", error);
+      return null; // Handle error and return null
     }
-
-    return totalAmount;
   };
 
   const getTotalCartItems = () => {
@@ -221,6 +214,7 @@ const ShopContextProvider = (props) => {
     addToCart,
     removeFromCart,
     fetchCartItems,
+    slideshow,
   };
 
   return (

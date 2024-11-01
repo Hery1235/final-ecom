@@ -1,0 +1,19 @@
+.checkout {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.checkout button {
+  font-size: 14px;
+  width: 160px;
+  height: 40px;
+}
+@media (max-width: 800px) {
+  .checkout button {
+    font-size: 10px;
+    width: 120px;
+    height: 30px;
+  }
+}

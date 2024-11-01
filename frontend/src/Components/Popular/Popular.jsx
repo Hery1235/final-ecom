@@ -1,35 +1,42 @@
-import React, {useEffect, useState } from "react";
-import './Popular.css'
-import Item from '../Item/Item';
+import React, { useEffect, useState } from "react";
+import "./Popular.css";
+import Item from "../Item/Item";
 const Popular = () => {
-
   const [popular, setPopular] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:4000/popular')
-        .then((response) => response.json())
-        .then((data) => {
-            setPopular(data);
-        })
-        .catch((error) => console.error("Error fetching products:", error)); // Add error handling
-}, []);
+    fetch("http://localhost:4000/popular")
+      .then((response) => response.json())
+      .then((data) => {
+        setPopular(data);
+      })
+      .catch((error) => console.error("Error fetching products:", error)); // Add error handling
+  }, []);
 
-// This useEffect will run whenever `all_product` changes
-useEffect(() => {
-     // Logs when the state changes
-}, [popular]); // Run this effect only when `all_product` is updated
-
+  // This useEffect will run whenever `all_product` changes
+  useEffect(() => {
+    // Logs when the state changes
+  }, [popular]); // Run this effect only when `all_product` is updated
 
   return (
-    <div className='popular'>
+    <div className="popular">
       <h1>POPULAR IN WOMEN</h1>
-      <hr/>
+      <hr />
       <div className="popular-item">
-        {popular.map((item, i)=>{
-            return <Item key = {i} id={item.id} name={item.name} image={item.image} new_price={item.new_price} old_price={item.old_price}/>
+        {popular.map((item, i) => {
+          return (
+            <Item
+              key={i}
+              id={item._id}
+              name={item.name}
+              image={item.image}
+              new_price={item.new_price}
+              old_price={item.old_price}
+            />
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Popular
+export default Popular;

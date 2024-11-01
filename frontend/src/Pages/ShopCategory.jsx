@@ -3,13 +3,20 @@ import { ShopContext } from "../Context/ShopContext";
 import Item from "../Components/Item/Item";
 import dropdown_icon from "../Components/Assets/dropdown_icon.png";
 import "./CSS/ShopCategory.css";
+import Slideshow from "../Components/Slideshow/Slideshow";
 
 const ShopCategory = (props) => {
-  const { all_product } = useContext(ShopContext);
+  const { all_product, slideshow } = useContext(ShopContext);
+  // const pakslideimages = slideshow.filter(
+  //   (item) => item.category === props.slideshowcategory
+  // );
+
+  const pakImages = slideshow.map((item) => item.image);
 
   return (
     <div className="shop-catogory">
-      <img className="shopcategory-banner" src={props.banner} alt="" />
+      {/* <img className="shopcategory-banner" src={props.banner} alt="" /> */}
+      <Slideshow image={pakImages} />
       <div className="shopcategory-indexSort">
         <p>
           <span>Showing 1-12 </span>out of 36 products
@@ -37,8 +44,6 @@ const ShopCategory = (props) => {
           }
         })}
       </div>
-
-      <div className="explore-more-container">Load more</div>
     </div>
   );
 };

@@ -1,0 +1,73 @@
+.main-container {
+  width: 100%;
+}
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%; /* Card width set to 90% of the screen */
+  margin: 20px auto; /* Center the card horizontally */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inside {
+  display: flex;
+  gap: 30px;
+}
+.inside button {
+  width: 90px;
+  height: 40px;
+  margin-top: 10px;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.card-container {
+  width: 98%; /* Container inside the card set to 80% of the card width */
+  background-color: rgb(244, 242, 242);
+  padding: 4px;
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto; /* Center the card-container inside the card */
+  box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+.cart-data {
+  background-color: #f9f9f9;
+  padding: 10px;
+  width: 80%;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+.cartitem-format-main {
+  height: auto;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.cart-data h4 {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.cart-data ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.cart-data li {
+  padding: 5px 0;
+  font-size: 0.9rem;
+}
+.cartitems-format {
+  display: flex;
+  gap: 20px;
+}
+.carticon-product-icon {
+  width: 40px;
+  height: 40px;
+}

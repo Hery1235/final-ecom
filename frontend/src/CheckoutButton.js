@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PayPalButtons } from "@paypal/react-paypal-js"; // Ensure you're using PayPal components correctly
+import "../../frontend/src/CheckoutButton.css";
 
 const CheckoutButton = () => {
   const [showPayPal, setShowPayPal] = useState(false);
@@ -13,6 +14,9 @@ const CheckoutButton = () => {
   const createOrder = async () => {
     const response = await fetch("http://localhost:4000/create-order", {
       method: "POST",
+      headers: {
+        "auth-token": localStorage.getItem("auth-token"),
+      },
     });
 
     if (!response.ok) {
@@ -20,6 +24,7 @@ const CheckoutButton = () => {
     }
 
     const orderData = await response.json();
+    console.log("This is the order id ", orderData.id);
     return orderData.id; // Return the order ID to PayPal
   };
 
@@ -29,6 +34,7 @@ const CheckoutButton = () => {
       const response = await fetch("http://localhost:4000/capture-order", {
         method: "POST",
         headers: {
+          "auth-token": localStorage.getItem("auth-token"),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderID: data.orderID }),
@@ -38,6 +44,7 @@ const CheckoutButton = () => {
 
       if (captureData.status === "success") {
         console.log("Payment successful:", captureData);
+
         alert("Payment successful!");
       } else {
         console.log("Payment failed:", captureData);
@@ -50,7 +57,7 @@ const CheckoutButton = () => {
   };
 
   return (
-    <div>
+    <div className="checkout">
       {/* Proceed to Checkout button */}
       <button onClick={handleProceedToCheckout}>Proceed to Checkout</button>
 

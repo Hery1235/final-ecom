@@ -5,6 +5,7 @@ import cart_icon from "../Assets/cart_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
 import { Link } from "react-router-dom";
 import dropDownIcon from "../Assets/downloaded_dropdown.png";
+import ronalogo from "../Assets/ronalogo.jpeg";
 const Navbar = () => {
   const { getTotalCartItems } = useContext(ShopContext);
   const [menu, setMenu] = useState("shop");
@@ -16,7 +17,7 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navbar-logo">
-        <img src={logo} alt="" />
+        <img src={ronalogo} alt="" />
         <p>Rona Design</p>
       </div>
       <img
@@ -38,7 +39,7 @@ const Navbar = () => {
           }}
         >
           <Link style={{ textDecoration: "none" }} to="/men">
-            PAK
+            Pak
           </Link>
           {menu === "men" ? <hr /> : <></>}{" "}
         </li>
@@ -48,7 +49,7 @@ const Navbar = () => {
           }}
         >
           <Link style={{ textDecoration: "none" }} to="/women">
-            AFGHAN
+            Afg
           </Link>
           {menu === "women" ? <hr /> : <></>}{" "}
         </li>
@@ -59,7 +60,7 @@ const Navbar = () => {
           }}
         >
           <Link style={{ textDecoration: "none" }} to="/kids">
-            Kids
+            Bridal
           </Link>
           {menu === "kids" ? <hr /> : <></>}{" "}
         </li>

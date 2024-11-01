@@ -5,6 +5,7 @@ const AddProduct = () => {
   const [image, setImage] = useState(false);
   const [producDetails, setProductDetails] = useState({
     name: "",
+    discription: "",
     image: "",
     category: "",
     new_price: "",
@@ -17,6 +18,7 @@ const AddProduct = () => {
 
   const changeHandler = (e) => {
     setProductDetails({ ...producDetails, [e.target.name]: e.target.value });
+    console.log(producDetails);
   };
 
   const Add_Product = async () => {
@@ -24,6 +26,7 @@ const AddProduct = () => {
     let product = producDetails;
     let formData = new FormData();
     formData.append("product", image);
+    console.log(formData);
 
     await fetch("http://localhost:4000/upload", {
       // Fixed URL here
@@ -70,6 +73,17 @@ const AddProduct = () => {
           placeholder="Type here"
         />
       </div>
+      <div className="addproduct-itemfield">
+        <p>Product Discription</p>
+        <input
+          value={producDetails.discription}
+          onChange={changeHandler}
+          type="text"
+          name="discription"
+          id=""
+          placeholder="Type here"
+        />
+      </div>
       <div className="addproduct-price">
         <div className="addproduct-itemfield">
           <p>Price</p>
@@ -104,7 +118,7 @@ const AddProduct = () => {
         >
           <option value="men">Men</option>
           <option value="women">Women</option>
-          <option value="kid">Kids</option>
+          <option value="kid">Bridal</option>
         </select>
       </div>
       <div className="addproduct-itemfield">

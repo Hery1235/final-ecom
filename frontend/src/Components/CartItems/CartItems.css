@@ -1,101 +1,139 @@
-.cartitems{
-    margin: 100px 80px;
+.cartitems {
+  margin: 100px 80px;
 }
-.cartitems hr{
-    height: 3px;
-    background: #e2e2e2;
-    border: 0;
+.displayfor-smallscreen {
+  display: none;
 }
-.cartitem-format-main{
-    display: grid;
-    grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
-    align-items: center;
+.cartitems hr {
+  height: 3px;
+  background: #e2e2e2;
+  border: 0;
+}
+.cartitem-format-main {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0px;
+  color: #454545;
+  font-size: 18px;
+  font-weight: 600;
+}
+.cartitems-format {
+  font-size: 17px;
+  font-weight: 500;
+}
+.carticon-product-icon {
+  height: 62px;
+}
+.carticon-remove-item {
+  width: 15px;
+  cursor: pointer;
+  margin: 0px 40px;
+  color: #454545;
+}
+.cartitems-quantity {
+  height: 50px;
+  width: 50px;
+  border: 2px solid #e2e2e2;
+  background: white;
+}
+.cartitems-down {
+  display: flex;
+  margin: 80px 0px;
+  gap: 300px;
+}
+.cartitems-total {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.cartitems-total-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0px;
+}
+.cartitems-total button {
+  width: 200px;
+  height: 40px;
+  outline: none;
+  border: none;
+  background: #ff5a5a;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .cartitems {
+    margin: 40px 30px;
+  }
+  .displayfor-smallscreen {
+    display: flex; /* Align image and content side by side */
+    gap: 10px; /* Space between image and details */
+    align-items: flex-start; /* Ensure top alignment */
+    padding: 10px; /* Optional padding for spacing */
+  }
+  .displayfor-bigscreeen {
+    display: none;
+  }
+  .cartitem-format-main {
+    display: none;
+  }
+
+  .carticon-product-icon {
+    width: 70px; /* Adjust size as needed */
+    height: auto;
+  }
+
+  .product-details {
+    padding: 10px;
+    width: 100%;
     gap: 20px;
-    padding: 20px 0px;
-    color: #454545;
-    font-size: 18px;
-    font-weight: 600;
-}
-.cartitems-format{
-    font-size: 17px;
-    font-weight: 500;
-}
-.carticon-product-icon{
-    height: 62px;
-}
-.carticon-remove-item{
-    width: 15px;
-    cursor: pointer;
-    margin: 0px 40px;
-    color: #454545;
-}
-.cartitems-quantity{
-    height: 50px;
-    width: 50px;
-    border: 2px solid #e2e2e2;
-    background: white;
-}
-.cartitems-down{
-    display: flex;
-    margin: 80px 0px;
-    gap: 300px;
-  
-}
-.cartitems-total{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-}
-.cartitems-total-item{
+  }
+  .name-price {
     display: flex;
     justify-content: space-between;
-    padding: 15px 0px;
-}
-.cartitems-total button{
-    width: 200px;
-    height: 40px;
-    outline: none;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .size-quantity-totalprice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .cartitems-quantity {
+    height: 30px;
+    width: 30px;
     border: none;
-    background: #ff5a5a;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.cartitems-promocode{
-    flex: 1;
-    font-size: 16px;
-    font-weight: 500;
-}
-.cartitems-promocode p{
-    color: #555;
-}
-.cartitems-promobox {
-    width: 500px; /* Make sure this is sufficient to contain both input and button */
-    margin-top: 15px;
-    padding-left: 20px;
-    height: 58px;
-    background: #eaeaea;
-    display: flex; /* Ensure the container is a flex container */
-    align-items: center; /* Center items vertically */
-}
+  }
+  .displayfor-smallscreen > div:last-child {
+    display: flex;
+    justify-content: space-between;
+  }
+  .mulandequalsign {
+    width: 10px;
+    height: 10px;
+  }
+  .removeicon-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
 
-.cartitems-promobox input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 16px;
-    width: 330px; /* Adjust width if necessary */
-    height: 50px;
-}
+  .carticon-remove-item {
+    height: 15px;
+    width: 15px;
+    margin: 0px;
+  }
 
-.cartitems-promobox button {
-    width: 170px; /* Adjust width if necessary */
-    height: 100%; /* Ensure height is consistent with input */
-    font-size: 16px;
-    background: black;
-    color: white;
-    cursor: pointer;
-    margin-left: 10px; /* Adds space between input and button */
+  .name-price,
+  .size-quantity-totalprice {
+    display: flex;
+    gap: 10px; /* Space between name/price or size/quantity elements */
+    justify-content: space-between;
+  }
 }

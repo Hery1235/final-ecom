@@ -1,19 +1,42 @@
-import React from 'react'
-import './RelatedProduct.css'
-import data_product from '../Assets/data'
-import Item from '../Item/Item'
+import React, { useState, useEffect } from "react";
+import "./RelatedProduct.css";
+import data_product from "../Assets/data";
+import Item from "../Item/Item";
 const RelatedProduct = () => {
+  const [relatedProducts, setrelatedProducts] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:4000/popular")
+      .then((response) => response.json())
+      .then((data) => {
+        setrelatedProducts(data);
+      })
+      .catch((error) => console.error("Error fetching products:", error)); // Add error handling
+  }, []);
+
+  // This useEffect will run whenever `all_product` changes
+  useEffect(() => {
+    // Logs when the state changes
+  }, [relatedProducts]);
   return (
-    <div className='relatedproducts'>
+    <div className="relatedproducts">
       <h1>Related Products</h1>
       <hr />
       <div className="relatedproducts-items">
-       {data_product.map((item, i)=>{
-        return <Item key = {i} id={item.id} name={item.name} image={item.image} new_price={item.new_price} old_price={item.old_price}/>
-       })}
+        {relatedProducts.map((item, i) => {
+          return (
+            <Item
+              key={i}
+              id={item._id}
+              name={item.name}
+              image={item.image}
+              new_price={item.new_price}
+              old_price={item.old_price}
+            />
+          );
+        })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RelatedProduct
+export default RelatedProduct;

@@ -14,39 +14,6 @@ const { type } = require("os");
 app.use(express.json());
 app.use(cors());
 
-// Database connection : mongodb+srv://mh47098:<db_password>@cluster0.owbqb.mongodb.net/
-mongoose.connect(
-  "mongodb+srv://mh47098:Hamdankhan1122%40@cluster0.owbqb.mongodb.net/e-comerece"
-);
-
-//Api creation
-
-app.get("/", (req, res) => {
-  res.send("Express in running");
-});
-
-// image storage
-const storage = multer.diskStorage({
-  destination: "./upload/images",
-  filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
-    );
-  },
-});
-
-const upload = multer({ storage: storage });
-
-// Creating upload endpoints for images
-app.use("/images", express.static("upload/images"));
-app.post("/upload", upload.single("product"), (req, res) => {
-  res.json({
-    success: 1,
-    image_url: `http://localhost:${port}/images/${req.file.filename}`,
-  });
-});
-
 // schema for creating products
 const Product = mongoose.model("product", {
   id: {
@@ -54,6 +21,10 @@ const Product = mongoose.model("product", {
     required: true,
   },
   name: {
+    type: String,
+    required: true,
+  },
+  discription: {
     type: String,
     required: true,
   },
@@ -82,77 +53,21 @@ const Product = mongoose.model("product", {
     default: true,
   },
 });
-
-// creating endpoints for add product
-app.post("/addproduct", async (req, res) => {
-  let products = await Product.find({});
-  let id;
-  if (products.length > 0) {
-    const lastProduct_array = products.slice(-1);
-    let last_product = lastProduct_array[0];
-    id = last_product.id + 1;
-  } else {
-    id = 1;
-  }
-  const product = new Product({
-    id: id,
-    name: req.body.name,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-  });
-
-  await product.save();
-  console.log("Product saved");
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
+// schema for creating products
+const SliceShow = mongoose.model("slideShow", {
+  id: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
 });
-
-// creating api for deleting products
-app.post("/removeproduct", async (req, res) => {
-  await Product.deleteOne({ id: req.body.id });
-  console.log("Deleted");
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
-});
-
-// Retrive all the products from database
-app.get("/allproducts", async (req, res) => {
-  let products = await Product.find({});
-  try {
-    res.send(products);
-  } catch (error) {
-    console.log("Error while sending data ", error);
-  }
-});
-
-app.get("/allproducts/:productid", async (req, res) => {
-  try {
-    // Extract the product ID from the request parameters
-    const productId = req.params.productid;
-
-    // Use `findById` to fetch the product with the specific ID from the database
-    let product = await Product.findById(productId);
-
-    // Check if the product was found
-    if (!product) {
-      return res.status(404).send("Product not found");
-    }
-
-    // Send the product data as the response
-
-    res.json(product);
-  } catch (error) {
-    console.error("Error while fetching product by ID:", error);
-    res.status(500).send("Server error");
-  }
-});
-
 //schema creating user model
 
 const Users = mongoose.model("Users", {
@@ -199,6 +114,300 @@ const Users = mongoose.model("Users", {
     type: Date,
     default: Date.now,
   },
+});
+
+// Schemas for Orders
+const Orders = mongoose.model("Orders", {
+  userId: {
+    type: String,
+    required: true, // Ensure that userId is required
+  },
+  orderId: {
+    type: String,
+    required: true, // Add required where necessary
+  },
+  oderName: {
+    type: String,
+    required: true, // Add required where necessary
+  },
+  orderPhoneNumber: {
+    type: String,
+    required: true,
+  },
+  orderEmail: {
+    type: String,
+    required: true,
+  },
+  orderAdress: {
+    type: String,
+    required: true,
+  },
+  totalPaid: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  cartData: [
+    {
+      productId: {
+        type: String,
+        default: null,
+      },
+      S: {
+        type: Number,
+        default: 0,
+      },
+      M: {
+        type: Number,
+        default: 0,
+      },
+      L: {
+        type: Number,
+        default: 0,
+      },
+      XL: {
+        type: Number,
+        default: 0,
+      },
+      XXL: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+});
+
+// Order place function to database
+const placeOrder = async (
+  userId,
+  orderId,
+  customerName,
+  phoneNumber,
+  customerEmail,
+  shippingAddress,
+  totalPaid,
+  cartData
+) => {
+  const fullAddress = `${shippingAddress.address_line_1}, ${shippingAddress.admin_area_2}, ${shippingAddress.postal_code}, ${shippingAddress.country_code}`;
+
+  let order = new Orders({
+    userId: userId,
+    orderId: orderId,
+    oderName: customerName,
+    orderPhoneNumber: phoneNumber,
+    orderEmail: customerEmail,
+    orderAdress: fullAddress,
+    totalPaid: totalPaid,
+    date: Date.now(),
+    cartData: cartData, // Ensure this is an array of products as per the schema
+  });
+
+  await order.save();
+
+  return;
+};
+
+const getCartByUserID = async (userId) => {
+  if (!userId) {
+    return res.status(401).send("Unauthorized");
+  }
+
+  // Find the user in the database
+  let userData = await Users.findOne({ _id: userId });
+  if (!userData) {
+    return res.status(404).send("User not found");
+  }
+  // Convert cartData (if it's a Map) back to an object for the response
+  let cartData =
+    userData.cartData instanceof Map
+      ? Object.fromEntries(userData.cartData)
+      : userData.cartData;
+
+  // remove null values
+  cartData = cartData?.filter((item) => item);
+
+  return cartData;
+};
+
+const getProductById = async (productId) => {
+  // Use `findById` to fetch the product with the specific ID from the database
+  let product = await Product.findOne({ _id: productId });
+  // let userData = await Users.findOne({ _id: userId });
+
+  return product;
+};
+
+const getTotalAmount = async (cartItems) => {
+  if (!cartItems?.length) {
+    return 0;
+  }
+  console.log(cartItems.length);
+
+  let totalAmount = 0;
+
+  for (let index = 0; index < cartItems.length; index++) {
+    const productId = cartItems[index].productId;
+    let totalItems = 0;
+
+    totalItems =
+      totalItems +
+      cartItems[index].S +
+      cartItems[index].M +
+      cartItems[index].L +
+      cartItems[index].XL +
+      cartItems[index].XXL;
+
+    const productData = await getProductById(productId);
+
+    let price = totalItems * productData.new_price;
+
+    totalAmount = totalAmount + price;
+
+    // return productData;
+  }
+
+  return totalAmount;
+};
+
+// Database connection : mongodb+srv://mh47098:<db_password>@cluster0.owbqb.mongodb.net/
+mongoose.connect(
+  "mongodb+srv://mh47098:Hamdankhan1122%40@cluster0.owbqb.mongodb.net/e-comerece"
+);
+
+//Api creation
+app.get("/", (req, res) => {
+  res.send("Express in running");
+});
+
+// image storage
+const storage = multer.diskStorage({
+  destination: "./upload/images",
+  filename: (req, file, cb) => {
+    return cb(
+      null,
+      `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Creating upload endpoints for images
+app.use("/images", express.static("upload/images"));
+app.post("/upload", upload.single("product"), (req, res) => {
+  res.json({
+    success: 1,
+    image_url: `http://localhost:${port}/images/${req.file.filename}`,
+  });
+});
+
+app.post("/addslideshow", async (req, res) => {
+  let slideShows = await SliceShow.find({});
+
+  let id;
+  if (slideShows.length > 0) {
+    const lastSlideShow_array = slideShows.slice(-1);
+    let last_slideShow = lastSlideShow_array[0];
+    id = last_slideShow.id + 1;
+  } else {
+    id = 1;
+  }
+  const sliceShow = new SliceShow({
+    id: id,
+
+    image: req.body.imageUrl,
+    category: req.body.slideShowCategory,
+  });
+  await sliceShow.save();
+  console.log("SlideShow saved");
+  res.json({
+    success: true,
+    name: req.body.name,
+  });
+});
+app.get("/allslideshow", async (req, res) => {
+  let slideshows = await SliceShow.find({});
+  try {
+    res.send(slideshows);
+  } catch (error) {
+    console.log("Error while sending data ", error);
+  }
+});
+app.post("/removeslideshow", async (req, res) => {
+  await SliceShow.deleteOne({ id: req.body.id });
+  console.log("Deleted");
+  res.json({
+    success: true,
+  });
+});
+
+//creating api for deleting products
+app.post("/removeproduct", async (req, res) => {
+  await Product.deleteOne({ id: req.body.id });
+  console.log("Deleted");
+  res.json({
+    success: true,
+    name: req.body.name,
+  });
+});
+
+// creating endpoints for add product
+app.post("/addproduct", async (req, res) => {
+  let products = await Product.find({});
+  let id;
+  if (products.length > 0) {
+    const lastProduct_array = products.slice(-1);
+    let last_product = lastProduct_array[0];
+    id = last_product.id + 1;
+  } else {
+    id = 1;
+  }
+  const product = new Product({
+    id: id,
+    name: req.body.name,
+    discription: req.body.discription,
+    image: req.body.image,
+    category: req.body.category,
+    new_price: req.body.new_price,
+    old_price: req.body.old_price,
+  });
+
+  await product.save();
+  console.log("Product saved");
+  res.json({
+    success: true,
+    name: req.body.name,
+  });
+});
+
+// Retrive all the products from database
+app.get("/allproducts", async (req, res) => {
+  let products = await Product.find({});
+  try {
+    res.send(products);
+  } catch (error) {
+    console.log("Error while sending data ", error);
+  }
+});
+
+app.get("/allproducts/:productid", async (req, res) => {
+  try {
+    const product = await getProductById(req.params.productid); // Add 'await' here
+
+    // Check if the product was found
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+
+    // Send the product data as the response
+    res.json(product);
+  } catch (error) {
+    console.error("Error while fetching product by ID:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Creating endpoints for resgistering user
@@ -268,15 +477,15 @@ app.post("/login", async (req, res) => {
 // Creating endpoint forpopular items
 app.get("/popular", async (req, res) => {
   try {
-    // Fetch the last 4 products ordered by the newest
-    const lastFourProducts = await Product.find().sort({ _id: -1 }).limit(4);
+    // Fetch 4 random products
+    const randomProducts = await Product.aggregate([{ $sample: { size: 4 } }]);
 
-    // Return the last four products
-    res.send(lastFourProducts);
+    // Return the random products
+    res.send(randomProducts);
   } catch (error) {
     res
       .status(500)
-      .send({ message: "Error in fetching the last 4 products", error });
+      .send({ message: "Error in fetching random products", error });
   }
 });
 
@@ -286,6 +495,7 @@ app.get("/newcollection", async (req, res) => {
     // Fetch the last 4 products ordered by the newest
     const lastEightProducts = await Product.find().sort({ _id: -1 }).limit(8);
 
+    console.log("Last 8 products ", lastEightProducts);
     // Return the last four products
     res.send(lastEightProducts);
   } catch (error) {
@@ -299,13 +509,12 @@ app.get("/newcollection", async (req, res) => {
 const fetchUser = async (req, res, next) => {
   const token = req.header("auth-token");
   if (!token) {
-    console("USer not found");
+    console.log("USer not found");
     res.status(401).send({ error: "We do not have a valid token " });
   } else {
     try {
       const data = jwt.verify(token, "secret_ecom");
 
-      console.log(data);
       req.user = data.user;
       next();
     } catch (error) {
@@ -321,7 +530,6 @@ app.post("/addtocart", fetchUser, async (req, res) => {
     const userId = req.user.id; // Fetch user ID from the middleware
     const { productId, size } = req.body; // Extract product ID and size from request body
 
-    console.log(productId, "  ", size, "  ", userId);
     if (!userId) {
       return res.status(401).send("Unauthorized");
     }
@@ -341,7 +549,6 @@ app.post("/addtocart", fetchUser, async (req, res) => {
       existingProduct[size] = (existingProduct[size] || 0) + 1;
     } else {
       // If the product is not in the cart, create a new object
-      console.log("Adding new product to cart:", { productId, size });
       const newProduct = {
         productId: productId,
         S: 0,
@@ -433,32 +640,35 @@ app.post("/removefromcart", fetchUser, async (req, res) => {
 // Get cart end ponints
 app.post("/getcart", fetchUser, async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming user is identified by req.user.id
+    const userId = req.user.id;
+    console.log("User id:", userId);
 
-    if (!userId) {
-      return res.status(401).send("Unauthorized");
+    const cartData = await getCartByUserID(userId);
+
+    if (!cartData) {
+      console.error("No cart data found");
+      return res.status(404).json({ message: "Cart data not found" });
     }
-
-    // Find the user in the database
-    let userData = await Users.findOne({ _id: userId });
-    if (!userData) {
-      return res.status(404).send("User not found");
-    }
-    // Convert cartData (if it's a Map) back to an object for the response
-    let cartData =
-      userData.cartData instanceof Map
-        ? Object.fromEntries(userData.cartData)
-        : userData.cartData;
-
-    // remove null values
-    cartData = cartData?.filter((item) => item);
 
     // Return the cart data to the client
-
-    res.json({ cartData });
+    res.json(cartData); // Make sure this is always reached
   } catch (error) {
     console.error("Error in /getcart:", error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/gettotalamount", fetchUser, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const cartItems = await getCartByUserID(userId);
+
+    const totalAmount = await getTotalAmount(cartItems);
+
+    res.json(totalAmount);
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -470,7 +680,17 @@ let environment = new paypal.core.SandboxEnvironment(
 let client = new paypal.core.PayPalHttpClient(environment);
 
 // Create an order
-app.post("/create-order", async (req, res) => {
+// Create an order
+app.post("/create-order", fetchUser, async (req, res) => {
+  let totalAmount;
+  try {
+    const userId = req.user.id;
+    const cartItems = await getCartByUserID(userId);
+    totalAmount = await getTotalAmount(cartItems);
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+
   const request = new paypal.orders.OrdersCreateRequest();
   request.prefer("return=representation");
   request.requestBody({
@@ -479,7 +699,11 @@ app.post("/create-order", async (req, res) => {
       {
         amount: {
           currency_code: "USD",
-          value: "100.00", // You can replace this with dynamic amount
+          value: totalAmount, // Use the dynamic amount calculated
+        },
+        // Add this line to indicate that you want shipping info
+        shipping: {
+          // This field is left empty for PayPal to collect from the customer
         },
       },
     ],
@@ -487,6 +711,7 @@ app.post("/create-order", async (req, res) => {
 
   try {
     const order = await client.execute(request);
+
     res.json({ id: order.result.id }); // Send the order ID back to the frontend
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -494,17 +719,54 @@ app.post("/create-order", async (req, res) => {
 });
 
 // Capture the payment
-app.post("/capture-order", async (req, res) => {
+// Capture the payment
+app.post("/capture-order", fetchUser, async (req, res) => {
   const { orderID } = req.body;
+  let totalPaid;
+  let cartData;
+  let userId;
+
+  try {
+    userId = req.user.id;
+    cartData = await getCartByUserID(userId);
+    totalPaid = await getTotalAmount(cartData);
+    console.log("This is the trpe of total padi money");
+    console.log(totalPaid);
+    debugger;
+    // console.log(typeof totalPaid);
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
 
   const request = new paypal.orders.OrdersCaptureRequest(orderID);
-  request.requestBody({});
+  request.requestBody({}); // Capture the order
 
   try {
     const capture = await client.execute(request);
 
     // If the capture was successful
     if (capture.result.status === "COMPLETED") {
+      // Capture customer details
+      const customerName =
+        capture.result.payer.name.given_name +
+        " " +
+        capture.result.payer.name.surname;
+
+      const customerEmail = capture.result.payer.email_address;
+      const shippingAddress = capture.result.purchase_units[0].shipping.address;
+
+      const phoneNumber = "07459151351";
+      // capture.result.payer?.phone?.phone_number?.national_number;
+      placeOrder(
+        userId,
+        orderID,
+        customerName,
+        phoneNumber,
+        customerEmail,
+        shippingAddress,
+        totalPaid,
+        cartData
+      );
       res.json({ status: "success", capture });
     } else {
       res.json({ status: "failed", capture });
@@ -513,6 +775,26 @@ app.post("/capture-order", async (req, res) => {
     console.error("Error capturing order:", error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// Get all the order
+app.get("/allorders", async (req, res) => {
+  const allOrders = await Orders.find({});
+  try {
+    res.json(allOrders);
+  } catch (error) {
+    console.log(
+      "Error in sending of all orders this error is from backend Thanks "
+    );
+  }
+});
+app.post("/deletefromorder", async (req, res) => {
+  console.log("Trying to delte from backend ", req.body);
+  await Orders.deleteOne({ _id: req.body.id });
+  console.log("Deleted");
+  res.json({
+    success: true,
+  });
 });
 
 app.listen(port, (error) => {
