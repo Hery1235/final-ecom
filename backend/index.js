@@ -674,8 +674,8 @@ app.post("/gettotalamount", fetchUser, async (req, res) => {
 
 // PayPal Environment
 let environment = new paypal.core.SandboxEnvironment(
-  "Aaei0zojyru90c49LxduL7vBe1VmGJaqF5DCUiqOzi_RH0TOfuyXX9Mwh_caFsTPzT_iAjUflyl1rKgl", // Your PayPal Client ID
-  "EJDWfzTUM--YQbBj8cuQKZ3kQj0PNY4nKsBo_5NXNODyybVfUy2LQp4rCApJNAat0q-ngY8KmLaUi-XH" // Your PayPal Secret
+  "AYV-aTzNqlPUOhuOW5kP2-tZRArKGLrDezlDq8v5Cl7jtzI4oQoSvfRvzhRiIavnYl1ngiC5MiPLODRp", // Your PayPal Client ID
+  "EESD3Q7YguLpgMlOiXEK-wFIORWhRFWQHO79ygRoshsN1JhonnsF0MidwiuI39xjDaVTFDe4QLRBc4aY" // Your PayPal Secret
 );
 let client = new paypal.core.PayPalHttpClient(environment);
 
@@ -683,10 +683,12 @@ let client = new paypal.core.PayPalHttpClient(environment);
 // Create an order
 app.post("/create-order", fetchUser, async (req, res) => {
   let totalAmount;
+  debugger;
   try {
     const userId = req.user.id;
     const cartItems = await getCartByUserID(userId);
     totalAmount = await getTotalAmount(cartItems);
+    debugger;
   } catch (error) {
     return res.status(500).json({ error: "Something went wrong" });
   }
@@ -710,8 +712,9 @@ app.post("/create-order", fetchUser, async (req, res) => {
   });
 
   try {
+    debugger;
     const order = await client.execute(request);
-
+    debugger;
     res.json({ id: order.result.id }); // Send the order ID back to the frontend
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -742,7 +745,12 @@ app.post("/capture-order", fetchUser, async (req, res) => {
   request.requestBody({}); // Capture the order
 
   try {
-    const capture = await client.execute(request);
+    try {
+      const capture = await client.execute(request);
+    } catch (error) {
+      console.error("Capture error:", error.response); // Capture PayPal error details
+      res.status(500).json({ error: error.response });
+    }
 
     // If the capture was successful
     if (capture.result.status === "COMPLETED") {

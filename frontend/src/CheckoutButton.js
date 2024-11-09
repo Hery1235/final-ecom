@@ -24,6 +24,7 @@ const CheckoutButton = () => {
     }
 
     const orderData = await response.json();
+
     console.log("This is the order id ", orderData.id);
     return orderData.id; // Return the order ID to PayPal
   };
@@ -46,12 +47,14 @@ const CheckoutButton = () => {
         console.log("Payment successful:", captureData);
 
         alert("Payment successful!");
+        // Check if the window is a popup
+        setShowPayPal(false);
       } else {
         console.log("Payment failed:", captureData);
         alert("Payment failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error capturing payment:", error);
+      console.log("Error capturing payment:", error);
       alert("An error occurred during payment. Please try again.");
     }
   };
