@@ -5,7 +5,7 @@ import Item from "../Item/Item";
 const RelatedProduct = () => {
   const [relatedProducts, setrelatedProducts] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:4000/popular")
+    fetch("process.env.REACT_APP_API_BASE_URL/popular")
       .then((response) => response.json())
       .then((data) => {
         setrelatedProducts(data);

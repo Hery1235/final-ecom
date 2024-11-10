@@ -13,9 +13,12 @@ const ShopContextProvider = (props) => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:4000/allorders", {
-        method: "GET",
-      });
+      const response = await fetch(
+        "process.env.REACT_APP_API_BASE_URL/allorders",
+        {
+          method: "GET",
+        }
+      );
       const allOrders = await response.json();
       setOrder(allOrders);
     } catch (error) {
@@ -24,16 +27,19 @@ const ShopContextProvider = (props) => {
   };
   const fetchAllProducts = async () => {
     try {
-      const responce = await fetch("http://localhost:4000/allproducts", {
-        method: "GET",
-      });
+      const responce = await fetch(
+        "process.env.REACT_APP_API_BASE_URL/allproducts",
+        {
+          method: "GET",
+        }
+      );
       const all_product = await responce.json();
       setallProducts(all_product);
     } catch (error) {}
   };
   const deleteOrder = async (id) => {
     console.log("Trying to delete ", id);
-    await fetch("http://localhost:4000/deletefromorder", {
+    await fetch("process.env.REACT_APP_API_BASE_URL/deletefromorder", {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -674,8 +674,8 @@ app.post("/gettotalamount", fetchUser, async (req, res) => {
 
 // PayPal Environment
 let environment = new paypal.core.SandboxEnvironment(
-  "AYV-aTzNqlPUOhuOW5kP2-tZRArKGLrDezlDq8v5Cl7jtzI4oQoSvfRvzhRiIavnYl1ngiC5MiPLODRp", // Your PayPal Client ID
-  "EESD3Q7YguLpgMlOiXEK-wFIORWhRFWQHO79ygRoshsN1JhonnsF0MidwiuI39xjDaVTFDe4QLRBc4aY" // Your PayPal Secret
+  "ATefffvXltp2Byw3YHCL2TH5DsH8bLGbweDw8xkq_l_W_UZWOIhd8yVeTv4I74XIk1yUnMfx6DeXU9p0", // Your PayPal Client ID
+  "ENm-NG9bk2y8rZGpyWjaAfD0Fla6qzJcnkiwC0ObOEBfNUha_V8Gu-cfcpucOnvZHlh_eKqv9zFOvMYL" // Your PayPal Secret
 );
 let client = new paypal.core.PayPalHttpClient(environment);
 
@@ -745,12 +745,7 @@ app.post("/capture-order", fetchUser, async (req, res) => {
   request.requestBody({}); // Capture the order
 
   try {
-    try {
-      const capture = await client.execute(request);
-    } catch (error) {
-      console.error("Capture error:", error.response); // Capture PayPal error details
-      res.status(500).json({ error: error.response });
-    }
+    const capture = await client.execute(request);
 
     // If the capture was successful
     if (capture.result.status === "COMPLETED") {

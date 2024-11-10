@@ -12,12 +12,15 @@ const CheckoutButton = () => {
 
   // Create the order on the backend
   const createOrder = async () => {
-    const response = await fetch("http://localhost:4000/create-order", {
-      method: "POST",
-      headers: {
-        "auth-token": localStorage.getItem("auth-token"),
-      },
-    });
+    const response = await fetch(
+      "process.env.REACT_APP_API_BASE_URL/create-order",
+      {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("auth-token"),
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to create order");
@@ -32,14 +35,17 @@ const CheckoutButton = () => {
   const onApprove = async (data, actions) => {
     try {
       // Capture the order on the backend
-      const response = await fetch("http://localhost:4000/capture-order", {
-        method: "POST",
-        headers: {
-          "auth-token": localStorage.getItem("auth-token"),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ orderID: data.orderID }),
-      });
+      const response = await fetch(
+        "process.env.REACT_APP_API_BASE_URL/capture-order",
+        {
+          method: "POST",
+          headers: {
+            "auth-token": localStorage.getItem("auth-token"),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ orderID: data.orderID }),
+        }
+      );
 
       const captureData = await response.json();
 

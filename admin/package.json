@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "react-scripts build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -27,3 +27,4 @@
     "vite": "^5.4.1"
   }
 }
+ "build": "react-scripts build"

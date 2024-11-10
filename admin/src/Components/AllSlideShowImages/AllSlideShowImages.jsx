@@ -4,14 +4,14 @@ import cross_icon from "../../Assets/cross_icon.png";
 const AllSlideShowImages = () => {
   const [slideShowList, setslideShowList] = useState([]);
   const fetchslideShowList = async () => {
-    await fetch("http://localhost:4000/allslideshow")
+    await fetch("process.env.REACT_APP_API_BASE_URL/allslideshow")
       .then((res) => res.json())
       .then((data) => {
         setslideShowList(data);
       });
   };
   const removeSlideSHow = async (id) => {
-    await fetch("http://localhost:4000/removeslideshow", {
+    await fetch("process.env.REACT_APP_API_BASE_URL/removeslideshow", {
       method: "POST",
       headers: {
         accept: "application/json",

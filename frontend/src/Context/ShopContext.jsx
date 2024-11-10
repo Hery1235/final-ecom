@@ -19,7 +19,9 @@ const ShopContextProvider = (props) => {
   }, []);
 
   const fetchslideshow = async () => {
-    const resonce = await fetch("http://localhost:4000/allslideshow");
+    const resonce = await fetch(
+      "process.env.REACT_APP_API_BASE_URL/allslideshow"
+    );
     const slideshowdata = await resonce.json();
 
     setSlideSHow(slideshowdata);
@@ -31,20 +33,25 @@ const ShopContextProvider = (props) => {
       const token = localStorage.getItem("auth-token");
 
       // Fetch products
-      const productResponse = await fetch("http://localhost:4000/allproducts");
+      const productResponse = await fetch(
+        "process.env.REACT_APP_API_BASE_URL/allproducts"
+      );
       const productData = await productResponse.json();
       setAllProduct(productData);
 
       if (token) {
-        const cartResponse = await fetch("http://localhost:4000/getcart", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "auth-token": token,
-            "Content-type": "application/json",
-          },
-          body: "",
-        });
+        const cartResponse = await fetch(
+          "process.env.REACT_APP_API_BASE_URL/getcart",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "auth-token": token,
+              "Content-type": "application/json",
+            },
+            body: "",
+          }
+        );
 
         const cartData = await cartResponse.json();
 
@@ -68,7 +75,7 @@ const ShopContextProvider = (props) => {
     const authToken = localStorage.getItem("auth-token");
 
     if (authToken) {
-      fetch("http://localhost:4000/addtocart", {
+      fetch("process.env.REACT_APP_API_BASE_URL/addtocart", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -135,7 +142,7 @@ const ShopContextProvider = (props) => {
       const body = JSON.stringify({ productId, size });
       console.log("Request body:", body);
 
-      fetch("http://localhost:4000/removefromcart", {
+      fetch("process.env.REACT_APP_API_BASE_URL/removefromcart", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -162,14 +169,17 @@ const ShopContextProvider = (props) => {
 
   const getTototalAmount = async () => {
     try {
-      const response = await fetch("http://localhost:4000/gettotalamount", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "auth-token": localStorage.getItem("auth-token"),
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "process.env.REACT_APP_API_BASE_URL/gettotalamount",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "auth-token": localStorage.getItem("auth-token"),
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json(); // Parse the JSON response
