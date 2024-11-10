@@ -800,11 +800,4 @@ app.post("/deletefromorder", async (req, res) => {
   });
 });
 
-app.listen(port, (error) => {
-  if (!error) {
-    console.log("Server running on ", port);
-  } else {
-    console.log("Error ", error);
-  }
-});
 module.exports = app;
