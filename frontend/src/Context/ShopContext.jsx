@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
 
   const fetchslideshow = async () => {
     const resonce = await fetch(
-      "${process.env.REACT_APP_API_BASE_URL}/allslideshow"
+      `${process.env.REACT_APP_API_BASE_URL}/allslideshow`
     );
     const slideshowdata = await resonce.json();
 
