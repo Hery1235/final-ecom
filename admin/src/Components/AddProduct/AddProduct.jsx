@@ -28,7 +28,7 @@ const AddProduct = () => {
     formData.append("product", image);
     console.log(formData);
 
-    await fetch("process.env.REACT_APP_API_BASE_URL/upload", {
+    await fetch("${process.env.REACT_APP_API_BASE_URL}/upload", {
       // Fixed URL here
       method: "POST",
       headers: {
@@ -45,7 +45,7 @@ const AddProduct = () => {
     if (responceData.success) {
       product.image = responceData.image_url;
 
-      await fetch("process.env.REACT_APP_API_BASE_URL/addproduct", {
+      await fetch("${process.env.REACT_APP_API_BASE_URL}/addproduct", {
         method: "POST",
         headers: {
           Accept: "application/json",

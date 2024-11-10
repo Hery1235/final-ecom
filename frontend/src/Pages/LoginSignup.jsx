@@ -23,7 +23,7 @@ const LoginSignup = () => {
 
   const login = async () => {
     let responceData;
-    await fetch("process.env.REACT_APP_API_BASE_URL/login", {
+    await fetch("${process.env.REACT_APP_API_BASE_URL}/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -45,7 +45,7 @@ const LoginSignup = () => {
     console.log("sign up pressed", formData);
     let responseData;
 
-    await fetch("process.env.REACT_APP_API_BASE_URL/signup", {
+    await fetch("${process.env.REACT_APP_API_BASE_URL}/signup", {
       method: "POST",
       headers: {
         Accept: "application/json",
