@@ -10,111 +10,12 @@ const paypal = require("@paypal/checkout-server-sdk");
 const { error } = require("console");
 const { isReadable } = require("stream");
 const { type } = require("os");
+const Product = require("./models/productModel");
+const SliceShow = require("./models/slideShowModel");
+const Users = require("./models/userModel");
 
 app.use(express.json());
 app.use(cors());
-
-// schema for creating products
-const Product = mongoose.model("product", {
-  id: {
-    type: Number,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  discription: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  new_price: {
-    type: Number,
-    required: true,
-  },
-  old_price: {
-    type: Number,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  available: {
-    type: Boolean,
-    default: true,
-  },
-});
-// schema for creating products
-const SliceShow = mongoose.model("slideShow", {
-  id: {
-    type: Number,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-});
-//schema creating user model
-
-const Users = mongoose.model("Users", {
-  name: {
-    type: String,
-  },
-  email: {
-    type: String,
-    unique: true,
-  },
-  password: {
-    type: String,
-  },
-  cartData: [
-    {
-      productId: {
-        type: String,
-        default: null,
-      },
-      S: {
-        type: Number,
-        default: 0,
-      },
-      M: {
-        type: Number,
-        default: 0,
-      },
-      L: {
-        type: Number,
-        default: 0,
-      },
-      XL: {
-        type: Number,
-        default: 0,
-      },
-      XXL: {
-        type: Number,
-        default: 0,
-      },
-    },
-  ],
-
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-});
 
 // Schemas for Orders
 const Orders = mongoose.model("Orders", {
