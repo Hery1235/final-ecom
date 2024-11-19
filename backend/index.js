@@ -10,6 +10,7 @@ const paypal = require("@paypal/checkout-server-sdk");
 const { error } = require("console");
 const { isReadable } = require("stream");
 const { type } = require("os");
+
 const Product = require("./models/productModel");
 const SliceShow = require("./models/slideShowModel");
 const Users = require("./models/userModel");
@@ -122,7 +123,7 @@ app.get("/", (req, res) => {
 
 // image storage
 const storage = multer.diskStorage({
-  destination: "./upload/images",
+  destination: "/upload/images",
   filename: (req, file, cb) => {
     return cb(
       null,
