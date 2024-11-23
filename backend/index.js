@@ -123,7 +123,7 @@ app.get("/", (req, res) => {
 
 // image storage
 const storage = multer.diskStorage({
-  destination: "/tmp", // Use temporary directory
+  destination: "/images", // Use temporary directory
   filename: (req, file, cb) => {
     cb(
       null,
@@ -136,7 +136,7 @@ const upload = multer({ storage: storage });
 
 // Upload endpoint
 app.post("/upload", upload.single("product"), (req, res) => {
-  const filePath = `/tmp/${req.file.filename}`;
+  const filePath = `/images/${req.file.filename}`;
   res.json({
     success: 1,
     image_url: filePath,
