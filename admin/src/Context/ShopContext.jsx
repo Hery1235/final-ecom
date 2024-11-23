@@ -14,7 +14,7 @@ const ShopContextProvider = (props) => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        "${process.env.REACT_APP_API_BASE_URL}/allorders",
+        `${process.env.REACT_APP_API_BASE_URL}/allorders`,
         {
           method: "GET",
         }
@@ -28,7 +28,7 @@ const ShopContextProvider = (props) => {
   const fetchAllProducts = async () => {
     try {
       const responce = await fetch(
-        "${process.env.REACT_APP_API_BASE_URL}/allproducts",
+        `${process.env.REACT_APP_API_BASE_URL}/allproducts`,
         {
           method: "GET",
         }
@@ -39,7 +39,7 @@ const ShopContextProvider = (props) => {
   };
   const deleteOrder = async (id) => {
     console.log("Trying to delete ", id);
-    await fetch("${process.env.REACT_APP_API_BASE_URL}/deletefromorder", {
+    await fetch(`${process.env.REACT_APP_API_BASE_URL}/deletefromorder`, {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -27,7 +27,7 @@ const SlideShowImage = () => {
     let formData = new FormData();
     formData.append("product", image);
     console.log(formData);
-    await fetch("${process.env.REACT_APP_API_BASE_URL}/upload", {
+    await fetch(`${process.env.REACT_APP_API_BASE_URL}/upload`, {
       // Fixed URL here
       method: "POST",
       headers: {
@@ -50,7 +50,7 @@ const SlideShowImage = () => {
 
       console.log(responceData.image_url);
 
-      await fetch("${process.env.REACT_APP_API_BASE_URL}/addslideshow", {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/addslideshow`, {
         method: "POST",
         headers: {
           Accept: "application/json",
