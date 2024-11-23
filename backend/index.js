@@ -122,21 +122,21 @@ app.get("/", (req, res) => {
 });
 
 // image storage
-const storage = multer.diskStorage({
-  destination: "/tmp", // Use temporary directory
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
-
-const upload = multer({ storage: storage });
 
 // Upload endpoint
 app.post("/upload", upload.single("product"), (req, res) => {
-  const filePath = `/tmp/${req.file.filename}`;
+  const storage = multer.diskStorage({
+    destination: "/images", // Use temporary directory
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+      );
+    },
+  });
+
+  const upload = multer({ storage: storage });
+  const filePath = `/images/${req.file.filename}`;
   res.json({
     success: 1,
     image_url: filePath,
