@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "backend/api/index.js",
@@ -8,21 +9,12 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": { "distDir": "frontend/out" }
-    },
-    {
-      "src": "admin/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "admin/dist" }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "backend/api/index.js"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "admin/$1"
     },
     {
       "src": "/(.*)",
