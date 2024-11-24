@@ -18,7 +18,13 @@ const Users = require("./models/userModel");
 const Orders = require("./models/orderModel");
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    methods: ["GET", "POST"], // Allow the specific methods you need
+    allowedHeaders: ["Content-Type", "Authorization"], // Customize if needed
+  })
+);
 
 // Order place function to database
 const placeOrder = async (
