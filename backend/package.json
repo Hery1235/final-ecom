@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "express": "^4.20.0",
     "index.js": "^0.0.3",
@@ -18,6 +19,7 @@
     "mongoose": "^8.6.1",
     "mongos": "^0.0.0",
     "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "vercel": "^37.14.0"
   }
 }

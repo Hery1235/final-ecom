@@ -10,7 +10,8 @@ const paypal = require("@paypal/checkout-server-sdk");
 const { error } = require("console");
 const { isReadable } = require("stream");
 const { type } = require("os");
-
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const Product = require("./models/productModel");
 const SliceShow = require("./models/slideShowModel");
 const Users = require("./models/userModel");
@@ -121,27 +122,54 @@ app.get("/", (req, res) => {
   res.send("Express in running");
 });
 
-// image storage
-const storage = multer.diskStorage({
-  destination: "./upload/images",
-  filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
-    );
+// // image storage
+// const storage = multer.diskStorage({
+//   destination: "./upload/images",
+//   filename: (req, file, cb) => {
+//     return cb(
+//       null,
+//       `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
+//     );
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+
+// // Creating upload endpoints for images
+// app.use("/images", express.static("upload/images"));
+// app.post("/upload", upload.single("product"), (req, res) => {
+//   res.json({
+//     success: 1,
+//     image_url: `http://localhost:${port}/images/${req.file.filename}`,
+//   });
+// });
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Cloudinary Cloud Name
+  api_key: process.env.CLOUDINARY_API_KEY, // Cloudinary API Key
+  api_secret: process.env.CLOUDINARY_API_SECRET, // Cloudinary API Secret
+});
+
+// Use Cloudinary as the storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "uploads", // The folder name in your Cloudinary account
+    allowed_formats: ["jpg", "png", "jpeg"], // Allowed image formats
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
-// Creating upload endpoints for images
-app.use("/images", express.static("upload/images"));
+// Upload endpoint
 app.post("/upload", upload.single("product"), (req, res) => {
   res.json({
     success: 1,
-    image_url: `http://localhost:${port}/images/${req.file.filename}`,
+    image_url: req.file.path, // Cloudinary URL for the uploaded image
   });
 });
+
 app.post("/addslideshow", async (req, res) => {
   let slideShows = await SliceShow.find({});
 
