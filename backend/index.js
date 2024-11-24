@@ -20,9 +20,7 @@ const Orders = require("./models/orderModel");
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
-    methods: ["GET", "POST"], // Allow the specific methods you need
-    allowedHeaders: ["Content-Type", "Authorization"], // Customize if needed
+    origin: "http://localhost:5173", // Your frontend URL (localhost:5173 for development)
   })
 );
 
@@ -166,7 +164,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // Upload endpoint
 app.post("/upload", upload.single("product"), (req, res) => {
