@@ -123,23 +123,23 @@ app.get("/", (req, res) => {
 
 // image storage
 const storage = multer.diskStorage({
-  destination: "/tmp", // Use temporary directory
+  destination: "./upload/images",
   filename: (req, file, cb) => {
-    cb(
+    return cb(
       null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+      `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
     );
   },
 });
 
 const upload = multer({ storage: storage });
 
-// Upload endpoint
+// Creating upload endpoints for images
+app.use("/images", express.static("upload/images"));
 app.post("/upload", upload.single("product"), (req, res) => {
-  const filePath = `/tmp/${req.file.filename}`;
   res.json({
     success: 1,
-    image_url: filePath,
+    image_url: `http://localhost:${port}/images/${req.file.filename}`,
   });
 });
 app.post("/addslideshow", async (req, res) => {
