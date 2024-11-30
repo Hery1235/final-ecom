@@ -28,7 +28,8 @@ const corsOptions = {
   credentials: true, // Allow cookies if needed
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Order place function to database
