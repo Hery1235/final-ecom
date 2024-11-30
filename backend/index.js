@@ -19,7 +19,7 @@ const Orders = require("./models/orderModel");
 
 app.use(express.json());
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow only your frontend
+  origin: ["http://localhost:5173", "https://frontend-two-azure-18.vercel.app"], // Allow only your frontend
   methods: "GET, POST, PUT, DELETE", // Allowed HTTP methods
   allowedHeaders: "Content-Type, Authorization", // Allowed headers
   credentials: true, // Allow cookies if needed
