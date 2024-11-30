@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
 
   const fetchslideshow = async () => {
     const resonce = await fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/allslideshow`
+      `${import.meta.env.VITE_API_BASE_URL}/allslideshow`
     );
     const slideshowdata = await resonce.json();
 
@@ -34,14 +34,14 @@ const ShopContextProvider = (props) => {
 
       // Fetch products
       const productResponse = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/allproducts`
+        `${import.meta.env.VITE_API_BASE_URL}/allproducts`
       );
       const productData = await productResponse.json();
       setAllProduct(productData);
 
       if (token) {
         const cartResponse = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/getcart`,
+          `${import.meta.env.VITE_API_BASE_URL}/getcart`,
           {
             method: "POST",
             headers: {
@@ -75,7 +75,7 @@ const ShopContextProvider = (props) => {
     const authToken = localStorage.getItem("auth-token");
 
     if (authToken) {
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/addtocart`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/addtocart`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -142,7 +142,7 @@ const ShopContextProvider = (props) => {
       const body = JSON.stringify({ productId, size });
       console.log("Request body:", body);
 
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/removefromcart`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/removefromcart`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -170,7 +170,7 @@ const ShopContextProvider = (props) => {
   const getTototalAmount = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/gettotalamount`,
+        `${import.meta.env.VITE_API_BASE_URL}/gettotalamount`,
         {
           method: "POST",
           headers: {

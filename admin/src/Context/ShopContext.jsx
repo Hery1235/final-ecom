@@ -11,10 +11,13 @@ const ShopContextProvider = (props) => {
     fetchAllProducts();
   }, []);
 
+  console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
+  console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/allorders`,
+        `${import.meta.env.VITE_APP_API_BASE_URL}/allorders`,
         {
           method: "GET",
         }
@@ -25,31 +28,52 @@ const ShopContextProvider = (props) => {
       console.error("Error fetching orders:", error);
     }
   };
+
   const fetchAllProducts = async () => {
     try {
-      const responce = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/allproducts`,
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_BASE_URL}/allproducts`,
         {
           method: "GET",
         }
       );
-      const all_product = await responce.json();
-      setallProducts(all_product);
-    } catch (error) {}
+      console.log("All images");
+      console.log(response);
+      const allProduct = await response.json();
+      setallProducts(allProduct);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
+
   const deleteOrder = async (id) => {
-    console.log("Trying to delete ", id);
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/deletefromorder`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-      }),
-    });
-    fetchOrders();
+    try {
+      console.log("Trying to delete order with ID:", id);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_BASE_URL}/deletefromorder`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete order: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("Delete response:", result);
+
+      // Refresh the orders list after successful deletion
+      fetchOrders();
+    } catch (error) {
+      console.error("Error deleting order:", error);
+    }
   };
 
   const contextValue = {
@@ -57,6 +81,7 @@ const ShopContextProvider = (props) => {
     allProducts,
     deleteOrder,
     fetchOrders,
+    fetchAllProducts,
   };
 
   return (

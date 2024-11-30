@@ -1,32 +1,42 @@
 import React, { useEffect, useState } from "react";
 import "./ProductList.css";
 import cross_icon from "../../Assets/cross_icon.png";
-const ProductList = () => {
-  const [allproducts, setAllProducts] = useState([]);
+import { ShopContext } from "../../Context/ShopContext";
+import { useContext } from "react";
 
-  const fetchInfo = async () => {
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/allproducts`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAllProducts(data);
-      });
-  };
+const ProductList = () => {
+  const { allProducts, fetchAllProducts } = useContext(ShopContext);
 
   useEffect(() => {
-    fetchInfo();
+    fetchAllProducts(); // Fetch cart items on component mount
   }, []);
 
-  const remove_product = async (id) => {
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/removeproduct`, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: id }),
-    });
-    await fetchInfo();
-  };
+  console.log("This is imported product list from context", allProducts);
+  // const [allproducts, setAllProducts] = useState([]);
+
+  // const fetchInfo = async () => {
+  //   await fetch(`${import.meta.env.VITE_API_BASE_URL}/allproducts`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setAllProducts(data);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   fetchInfo();
+  // }, []);
+
+  // const remove_product = async (id) => {
+  //   await fetch(`${import.meta.env.VITE_API_BASE_URL}/removeproduct`, {
+  //     method: "POST",
+  //     headers: {
+  //       accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ id: id }),
+  //   });
+  //   await fetchInfo();
+  // };
 
   return (
     <div className="list-product">
@@ -41,7 +51,7 @@ const ProductList = () => {
       </div>
       <div className="listproduct-allproducts">
         <hr />
-        {allproducts.map((product, index) => {
+        {allProducts.map((product, index) => {
           return (
             <>
               <div

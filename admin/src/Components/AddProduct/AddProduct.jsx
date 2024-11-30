@@ -20,43 +20,70 @@ const AddProduct = () => {
     setProductDetails({ ...producDetails, [e.target.name]: e.target.value });
     console.log(producDetails);
   };
+  console.log("API Base URL:", import.meta.env.VITE_APP_API_BASE_URL);
 
   const Add_Product = async () => {
-    let responceData;
-    let product = producDetails;
-    let formData = new FormData();
-    formData.append("product", image);
-    console.log(formData);
+    try {
+      let response;
+      let product = producDetails;
 
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/upload`, {
-      // Fixed URL here
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        // Do not set 'Content-Type' when using FormData; the browser will set it automatically
-      },
-      body: formData,
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        responceData = data;
-      });
+      // Prepare FormData
+      let formData = new FormData();
+      formData.append("product", image);
+      console.log("Form Data:", formData);
 
-    if (responceData.success) {
-      product.image = responceData.image_url;
-
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/addproduct`, {
+      // Upload the image
+      response = await fetch(`https://backend-blue-seven.vercel.app/upload`, {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json",
+          // Do not set 'Content-Type' when using FormData; browser handles it automatically
         },
-        body: JSON.stringify(product),
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          data.success ? alert("Product successfully added") : alert("Failed");
-        });
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Image upload failed with status: ${response.status}`);
+      }
+
+      const uploadData = await response.json();
+      console.log("Upload Response:", uploadData);
+
+      // If upload successful, proceed to add product
+      if (uploadData.success) {
+        product.image = uploadData.image_url;
+
+        // Add the product
+        response = await fetch(
+          `https://backend-blue-seven.vercel.app/addproduct`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(product),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Add product failed with status: ${response.status}`);
+        }
+
+        const addProductData = await response.json();
+        console.log("Add Product Response:", addProductData);
+
+        if (addProductData.success) {
+          alert("Product successfully added");
+        } else {
+          alert("Failed to add product");
+        }
+      } else {
+        alert("Image upload failed. Cannot add product.");
+      }
+    } catch (error) {
+      console.error("Error in Add_Product:", error);
+      alert("An error occurred while adding the product. Please try again.");
     }
   };
 
