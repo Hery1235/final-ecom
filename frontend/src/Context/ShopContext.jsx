@@ -41,7 +41,7 @@ const ShopContextProvider = (props) => {
 
       if (token) {
         const cartResponse = await fetch(
-          `${process.env.REACT_APP_API_BASE_URLL}/getcart`,
+          `${process.env.REACT_APP_API_BASE_URL}/getcart`,
           {
             method: "POST",
             headers: {
