@@ -10,7 +10,7 @@ const getDefaultCart = () => {
 const ShopContextProvider = (props) => {
   const [all_product, setAllProduct] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [slideshow, setSlideSHow] = useState([]);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
 
   const fetchslideshow = async () => {
     const resonce = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/allslideshow`
+      `${process.env.REACT_APP_API_BASE_URL}/allslideshow`
     );
     const slideshowdata = await resonce.json();
 
@@ -29,19 +29,19 @@ const ShopContextProvider = (props) => {
 
   const fetchCartItems = async () => {
     try {
-      setLoading(true); // Set loading to true before fetching
+      // setLoading(true); // Set loading to true before fetching
       const token = localStorage.getItem("auth-token");
 
       // Fetch products
       const productResponse = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/allproducts`
+        `${process.env.REACT_APP_API_BASE_URL}/allproducts`
       );
       const productData = await productResponse.json();
       setAllProduct(productData);
 
       if (token) {
         const cartResponse = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/getcart`,
+          `${process.env.REACT_APP_API_BASE_URLL}/getcart`,
           {
             method: "POST",
             headers: {
@@ -62,7 +62,7 @@ const ShopContextProvider = (props) => {
     } catch (error) {
       console.error("Error fetching cart data:", error);
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      // setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -75,7 +75,7 @@ const ShopContextProvider = (props) => {
     const authToken = localStorage.getItem("auth-token");
 
     if (authToken) {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/addtocart`, {
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/addtocart`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -142,7 +142,7 @@ const ShopContextProvider = (props) => {
       const body = JSON.stringify({ productId, size });
       console.log("Request body:", body);
 
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/removefromcart`, {
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/removefromcart`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -170,7 +170,7 @@ const ShopContextProvider = (props) => {
   const getTototalAmount = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/gettotalamount`,
+        `${process.env.REACT_APP_API_BASE_URL}/gettotalamount`,
         {
           method: "POST",
           headers: {

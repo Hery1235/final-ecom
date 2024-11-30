@@ -13,7 +13,7 @@ const CheckoutButton = () => {
   // Create the order on the backend
   const createOrder = async () => {
     const response = await fetch(
-      "${import.meta.env.VITE_API_BASE_URL}/create-order",
+      `${process.env.REACT_APP_API_BASE_URL}/create-order`,
       {
         method: "POST",
         headers: {
@@ -36,7 +36,7 @@ const CheckoutButton = () => {
     try {
       // Capture the order on the backend
       const response = await fetch(
-        "${import.meta.env.VITE_API_BASE_URL}/capture-order",
+        `${process.env.REACT_APP_API_BASE_URL}/capture-order`,
         {
           method: "POST",
           headers: {

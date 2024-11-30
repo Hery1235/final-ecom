@@ -15,7 +15,7 @@ const ProductList = () => {
   // const [allproducts, setAllProducts] = useState([]);
 
   // const fetchInfo = async () => {
-  //   await fetch(`${import.meta.env.VITE_API_BASE_URL}/allproducts`)
+  //   await fetch(`${import.meta.env.REACT_APP_API_BASE_URL}/allproducts`)
   //     .then((res) => res.json())
   //     .then((data) => {
   //       setAllProducts(data);
@@ -26,17 +26,16 @@ const ProductList = () => {
   //   fetchInfo();
   // }, []);
 
-  // const remove_product = async (id) => {
-  //   await fetch(`${import.meta.env.VITE_API_BASE_URL}/removeproduct`, {
-  //     method: "POST",
-  //     headers: {
-  //       accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ id: id }),
-  //   });
-  //   await fetchInfo();
-  // };
+  const remove_product = async (id) => {
+    await fetch(`${import.meta.env.VITE_APP_API_BASE_URL}/removeproduct`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id }),
+    });
+  };
 
   return (
     <div className="list-product">

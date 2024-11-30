@@ -14,7 +14,7 @@ const Product = () => {
     const fetchProductData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/allproducts/${productId}`
+          `${process.env.REACT_APP_API_BASE_URL}/allproducts/${productId}`
         );
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);

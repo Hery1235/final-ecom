@@ -11,8 +11,8 @@ const ShopContextProvider = (props) => {
     fetchAllProducts();
   }, []);
 
-  console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
-  console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+  console.log("Base URL:", import.meta.env.REACT_APP_API_BASE_URL);
+  console.log("API Base URL:", import.meta.env.REACT_APP_API_BASE_URL);
 
   const fetchOrders = async () => {
     try {
