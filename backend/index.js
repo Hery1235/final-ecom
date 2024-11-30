@@ -17,7 +17,6 @@ const SliceShow = require("./models/slideShowModel");
 const Users = require("./models/userModel");
 const Orders = require("./models/orderModel");
 
-app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:5173",
@@ -30,6 +29,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 // Order place function to database
 const placeOrder = async (
