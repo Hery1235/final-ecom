@@ -1,3 +1,4 @@
+require("dotenv").config();
 const port = 4000;
 const express = require("express");
 const app = express();
@@ -162,24 +163,35 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY, // Cloudinary API Key
   api_secret: process.env.CLOUDINARY_API_SECRET, // Cloudinary API Secret
 });
-
-// Use Cloudinary as the storage
+// cloudinary.config({
+//   cloud_name: "dznt1xmx7",
+// });
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "uploads", // The folder name in your Cloudinary account
-    allowed_formats: ["jpg", "png", "jpeg"], // Allowed image formats
+    folder: "uploads", // The folder name where images will be stored
+    allowed_formats: ["jpg", "jpeg", "png"], // Allowed formats
   },
 });
 
-const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
+// Multer upload setup
+const upload = multer({ storage });
 
-// Upload endpoint
 app.post("/upload", upload.single("product"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: 0, message: "No file uploaded" });
+  }
+
+  // Cloudinary image URL
   res.json({
     success: 1,
-    image_url: req.file.path, // Cloudinary URL for the uploaded image
+    image_url: req.file.path, // The URL of the uploaded image on Cloudinary
   });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({ success: 0, message: "Server error during upload" });
 });
 
 app.post("/addslideshow", async (req, res) => {
@@ -195,9 +207,7 @@ app.post("/addslideshow", async (req, res) => {
   }
   const sliceShow = new SliceShow({
     id: id,
-
     image: req.body.imageUrl,
-    category: req.body.slideShowCategory,
   });
   await sliceShow.save();
   console.log("SlideShow saved");
