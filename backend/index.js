@@ -515,7 +515,7 @@ app.post("/removefromcart", fetchUser, async (req, res) => {
 });
 
 // Get cart end ponints
-app.post("/getcart", cors(corsOptions), fetchUser, async (req, res) => {
+app.post("/getcart", fetchUser, async (req, res) => {
   try {
     const userId = req.user.id;
     console.log("User id:", userId);
