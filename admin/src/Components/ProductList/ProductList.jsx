@@ -27,14 +27,23 @@ const ProductList = () => {
   // }, []);
 
   const remove_product = async (id) => {
-    await fetch(`${import.meta.env.VITE_APP_API_BASE_URL}/removeproduct`, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: id }),
-    });
+    const responece = await fetch(
+      `${import.meta.env.VITE_APP_API_BASE_URL}/removeproduct`,
+      {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: id }),
+      }
+    );
+    if (!responece.ok) {
+      console.log("Error removing product");
+    } else {
+      alert("Product removed successfully");
+      fetchAllProducts(); // Fetch updated products after removal
+    }
   };
 
   return (
