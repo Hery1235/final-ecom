@@ -80,10 +80,10 @@ const Navbar = () => {
             <Link to="/login">login</Link>
           </button>
         )}
-
+        {/* 
         <Link to="/cart">
-          <img src={cart_icon} alt="" />
-        </Link>
+          <img className="cart-icon-btn" src={cart_icon} alt="" />
+        </Link> */}
         <div className="nav-cart-counter">{getTotalCartItems()}</div>
       </div>
     </div>
