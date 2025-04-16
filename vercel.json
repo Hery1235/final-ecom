@@ -18,11 +18,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/$1",
-      "method": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "frontend/$1"
     }
   ]
 }
