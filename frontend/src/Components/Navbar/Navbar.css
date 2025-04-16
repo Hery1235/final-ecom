@@ -80,6 +80,9 @@
   width: 20px;
   height: 20px;
 }
+.cart-icon-btn {
+  display: none;
+}
 @media (max-width: 1280px) {
   .navbar {
     padding: 10px;
