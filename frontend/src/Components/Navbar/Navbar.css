@@ -46,6 +46,7 @@
   display: flex;
   align-items: center;
   gap: 45px;
+  display: none;
 }
 .nav-login-cart button {
   width: 157px;
@@ -112,6 +113,7 @@
   .nav-cart-counter {
     margin-left: -40px;
     font-size: 12px;
+    display: none;
   }
 }
 @media (max-width: 1024px) {
@@ -125,6 +127,7 @@
   }
   .nav-login-cart {
     gap: 30px;
+    display: none;
   }
   .nav-login-cart button {
     width: 80px;

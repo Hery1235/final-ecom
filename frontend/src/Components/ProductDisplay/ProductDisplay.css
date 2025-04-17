@@ -58,6 +58,7 @@
 }
 .productdisplay-right-size {
   margin-top: 10px;
+  display: none;
 }
 .productdisplay-right-sizes {
   display: flex;
@@ -83,17 +84,8 @@
   border: none;
   outline: none;
   cursor: pointer;
+  display: none;
   transition: transform 0.1s ease, background-color 0.1s ease; /* Smooth transition */
-}
-
-.productdisplay--right button:active {
-  transform: scale(0.95); /* Scale down on click */
-  background-color: #e63946; /* Optional: Change color on click */
-}
-
-/* Optional: Add a hover effect */
-.productdisplay--right button:hover {
-  background: #e63946; /* Darker shade on hover */
 }
 
 .productdisplay-right-category {

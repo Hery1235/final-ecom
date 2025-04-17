@@ -40,7 +40,7 @@ const Product = () => {
     <div>
       <Breadcrums product={productData} />
       <ProductDisplay product={productData} />
-      <DescriptionBox product={productData} />
+      {/* <DescriptionBox product={productData} /> */}
       {/* <RelatedProduct product={productData} /> */}
     </div>
   );
