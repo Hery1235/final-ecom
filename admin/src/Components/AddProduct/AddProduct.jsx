@@ -1,61 +1,73 @@
 import React, { useState } from "react";
 import "./AddProduct.css";
 import upload_area from "../../Assets/upload_area.svg";
+
 const AddProduct = () => {
-  const [image, setImage] = useState(false);
-  const [producDetails, setProductDetails] = useState({
+  const [images, setImages] = useState([]); // Changed to handle an array of images
+  const [productDetails, setProductDetails] = useState({
     name: "",
     discription: "",
     image: "",
-    category: "",
+    category: "Men",
     new_price: "",
     old_price: "",
   });
 
   const imageHandler = (e) => {
-    setImage(e.target.files[0]);
+    const files = Array.from(e.target.files); // Convert FileList to an array
+    setImages(files); // Update to handle multiple files (store them as an array)
   };
 
   const changeHandler = (e) => {
-    setProductDetails({ ...producDetails, [e.target.name]: e.target.value });
-    console.log(producDetails);
+    setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
   };
-  console.log("API Base URL:", import.meta.env.VITE_APP_API_BASE_URL);
 
   const Add_Product = async () => {
+    if (
+      productDetails.name === "" ||
+      productDetails.description === "" ||
+      productDetails.category === "" ||
+      productDetails.new_price === "" ||
+      productDetails.old_price === ""
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     try {
       let response;
-      let product = producDetails;
+      let product = productDetails;
 
       // Prepare FormData
       let formData = new FormData();
-      formData.append("product", image);
-      console.log("Form Data:", formData);
-
-      // Upload the image
-      response = await fetch(`https://backend-blue-seven.vercel.app/upload`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          // Do not set 'Content-Type' when using FormData; browser handles it automatically
-        },
-        body: formData,
+      images.forEach((image) => {
+        formData.append("productImages", image); // Append all selected images to FormData
       });
+
+      // Upload the images
+      response = await fetch(
+        `${import.meta.env.VITE_APP_API_BASE_URL}/upload`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Image upload failed with status: ${response.status}`);
       }
 
       const uploadData = await response.json();
-      console.log("Upload Response:", uploadData);
 
-      // If upload successful, proceed to add product
       if (uploadData.success) {
-        product.image = uploadData.image_url;
+        product.image = uploadData.image_urls; // Assuming the response returns an array of image URLs
 
         // Add the product
         response = await fetch(
-          `https://backend-blue-seven.vercel.app/addproduct`,
+          `${import.meta.env.VITE_APP_API_BASE_URL}/addproduct`,
           {
             method: "POST",
             headers: {
@@ -71,7 +83,6 @@ const AddProduct = () => {
         }
 
         const addProductData = await response.json();
-        console.log("Add Product Response:", addProductData);
 
         if (addProductData.success) {
           alert("Product successfully added");
@@ -92,22 +103,20 @@ const AddProduct = () => {
       <div className="addproduct-itemfield">
         <p>Product title</p>
         <input
-          value={producDetails.name}
+          value={productDetails.name}
           onChange={changeHandler}
           type="text"
           name="name"
-          id=""
           placeholder="Type here"
         />
       </div>
       <div className="addproduct-itemfield">
-        <p>Product Discription</p>
+        <p>Product Description</p>
         <input
-          value={producDetails.discription}
+          value={productDetails.discription}
           onChange={changeHandler}
           type="text"
           name="discription"
-          id=""
           placeholder="Type here"
         />
       </div>
@@ -115,22 +124,20 @@ const AddProduct = () => {
         <div className="addproduct-itemfield">
           <p>Price</p>
           <input
-            value={producDetails.old_price}
+            value={productDetails.old_price}
             onChange={changeHandler}
             type="text"
             name="old_price"
-            id=""
             placeholder="type here"
           />
         </div>
         <div className="addproduct-itemfield">
           <p>Offer Price</p>
           <input
-            value={producDetails.new_price}
+            value={productDetails.new_price}
             onChange={changeHandler}
             type="text"
             name="new_price"
-            id=""
             placeholder="type here"
           />
         </div>
@@ -138,7 +145,7 @@ const AddProduct = () => {
       <div className="addproduct-itemfield">
         <p>Category</p>
         <select
-          value={producDetails.category}
+          value={productDetails.category}
           onChange={changeHandler}
           name="category"
           className="addproduct-selector"
@@ -151,9 +158,11 @@ const AddProduct = () => {
       <div className="addproduct-itemfield">
         <label htmlFor="file-input">
           <img
-            src={image ? URL.createObjectURL(image) : upload_area}
+            src={
+              images.length > 0 ? URL.createObjectURL(images[0]) : upload_area
+            }
             className="addproduct-thumbnail-img"
-            alt=""
+            alt="Upload"
           />
         </label>
         <input
@@ -162,10 +171,11 @@ const AddProduct = () => {
           name="image"
           id="file-input"
           hidden
+          multiple // Added this to allow multiple files
         />
       </div>
       <button onClick={Add_Product} className="addproduct-btn">
-        Add{" "}
+        Add Product
       </button>
     </div>
   );

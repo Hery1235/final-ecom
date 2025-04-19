@@ -158,14 +158,15 @@ app.get("/", (req, res) => {
 // });
 
 // Configure Cloudinary
+
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Cloudinary Cloud Name
   api_key: process.env.CLOUDINARY_API_KEY, // Cloudinary API Key
   api_secret: process.env.CLOUDINARY_API_SECRET, // Cloudinary API Secret
 });
-// cloudinary.config({
-//   cloud_name: "dznt1xmx7",
-// });
+
+// Cloudinary storage setup
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -174,18 +175,23 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// Multer upload setup
+// Multer upload setup to handle multiple files
 const upload = multer({ storage });
 
-app.post("/upload", upload.single("product"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ success: 0, message: "No file uploaded" });
+// Handle multiple file upload
+app.post("/upload", upload.array("productImages", 10), (req, res) => {
+  // Check if files were uploaded
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ success: 0, message: "No files uploaded" });
   }
 
-  // Cloudinary image URL
+  // Collect URLs of all uploaded images
+  const imageUrls = req.files.map((file) => file.path); // Get the Cloudinary URLs of uploaded images
+
+  // Send response with image URLs
   res.json({
     success: 1,
-    image_url: req.file.path, // The URL of the uploaded image on Cloudinary
+    image_urls: imageUrls, // Array of image URLs from Cloudinary
   });
 });
 
@@ -383,7 +389,6 @@ app.get("/newcollection", async (req, res) => {
     // Fetch the last 4 products ordered by the newest
     const lastEightProducts = await Product.find().sort({ _id: -1 }).limit(8);
 
-    console.log("Last 8 products ", lastEightProducts);
     // Return the last four products
     res.send(lastEightProducts);
   } catch (error) {
