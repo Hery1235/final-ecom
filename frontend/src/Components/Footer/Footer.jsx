@@ -8,7 +8,7 @@ import pintester_icon from "../Assets/pintester_icon.png";
 import whatsapp_icon from "../Assets/whatsapp_icon.png";
 const Footer = () => {
   const phoneNumber = "+447908238907";
-  const instagramUsername = "muhammadharis6787";
+  const instagramUsername = "rona.designs";
   return (
     <div className="footer">
       <div className="footer-logo">

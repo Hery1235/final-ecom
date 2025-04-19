@@ -94,6 +94,11 @@
 .productdisplay-right-category span {
   font-weight: 600;
 }
+.note {
+}
+.note span {
+  color: red;
+}
 
 @media (max-width: 1280px) {
   .productdisplay {

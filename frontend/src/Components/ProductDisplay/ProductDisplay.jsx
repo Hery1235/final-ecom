@@ -148,6 +148,13 @@ const ProductDisplay = (props) => {
             )}
           </div>
         </div>
+        <br></br>
+        <div className="note">
+          <span>Note :</span> Online ordering will be available on our website
+          soon. In the meantime, please take a screenshot of the desired dress
+          and click the WhatsApp icon under the 'Contact Us' section to share it
+          with us for placing your order
+        </div>
 
         {/* <button
           onClick={() => {
