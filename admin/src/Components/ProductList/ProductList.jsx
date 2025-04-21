@@ -5,6 +5,7 @@ import { ShopContext } from "../../Context/ShopContext";
 import { useContext } from "react";
 
 const ProductList = () => {
+  const [loading, setLoading] = useState(false);
   const { allProducts, fetchAllProducts } = useContext(ShopContext);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const ProductList = () => {
   // }, []);
 
   const remove_product = async (id) => {
+    setLoading(true);
     const responece = await fetch(
       `${import.meta.env.VITE_APP_API_BASE_URL}/removeproduct`,
       {
@@ -39,14 +41,17 @@ const ProductList = () => {
       }
     );
     if (!responece.ok) {
+      setLoading(false);
       console.log("Error removing product");
     } else {
-      alert("Product removed successfully");
+      setLoading(false);
       fetchAllProducts(); // Fetch updated products after removal
     }
   };
 
-  return (
+  return loading ? (
+    <div className="spinner"></div>
+  ) : (
     <div className="list-product">
       <h1>All Products List</h1>
       <div className="listproduct-format-main">
@@ -68,7 +73,7 @@ const ProductList = () => {
               >
                 <img
                   className="listproduct-product-icon"
-                  src={product.image}
+                  src={product.image[0]}
                   alt=""
                 />
                 <p>{product.name}</p>

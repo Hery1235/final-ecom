@@ -1,21 +1,45 @@
 import React, { useState } from "react";
 import "./AddProduct.css";
 import upload_area from "../../Assets/upload_area.svg";
+import imageCompression from "browser-image-compression";
 
 const AddProduct = () => {
   const [images, setImages] = useState([]); // Changed to handle an array of images
+  const [loading, setLoading] = useState(false);
   const [productDetails, setProductDetails] = useState({
     name: "",
     discription: "",
     image: "",
-    category: "Men",
+    category: "men",
     new_price: "",
     old_price: "",
   });
 
-  const imageHandler = (e) => {
+  const imageHandler = async (e) => {
+    setLoading(true); // Set loading to true when starting the image upload
     const files = Array.from(e.target.files); // Convert FileList to an array
-    setImages(files); // Update to handle multiple files (store them as an array)
+    const compressedImages = [];
+
+    const options = {
+      maxSizeMB: 1, // Target max size (adjust as needed)
+      maxWidthOrHeight: 1024, // Resize dimensions (optional)
+      useWebWorker: true, // Use Web Workers for better performance
+    };
+
+    // Compress each image file selected
+    for (let file of files) {
+      try {
+        const compressedFile = await imageCompression(file, options);
+        compressedImages.push(compressedFile); // Add compressed file to the array
+      } catch (err) {
+        console.error("Compression error:", err);
+        compressedImages.push(file); // If compression fails, use the original file
+      }
+    }
+
+    // Update state with the compressed (or original) images
+    setImages(compressedImages);
+    setLoading(false); // Set loading to false after processing the images
   };
 
   const changeHandler = (e) => {
@@ -25,7 +49,7 @@ const AddProduct = () => {
   const Add_Product = async () => {
     if (
       productDetails.name === "" ||
-      productDetails.description === "" ||
+      productDetails.discription === "" ||
       productDetails.category === "" ||
       productDetails.new_price === "" ||
       productDetails.old_price === ""
@@ -35,12 +59,14 @@ const AddProduct = () => {
     }
 
     try {
+      setLoading(true);
       let response;
       let product = productDetails;
 
       // Prepare FormData
       let formData = new FormData();
       images.forEach((image) => {
+        console.log(image); // log the image object to see if it's valid
         formData.append("productImages", image); // Append all selected images to FormData
       });
 
@@ -57,6 +83,7 @@ const AddProduct = () => {
       );
 
       if (!response.ok) {
+        setLoading(false);
         throw new Error(`Image upload failed with status: ${response.status}`);
       }
 
@@ -79,13 +106,25 @@ const AddProduct = () => {
         );
 
         if (!response.ok) {
+          setLoading(false);
           throw new Error(`Add product failed with status: ${response.status}`);
         }
 
         const addProductData = await response.json();
 
         if (addProductData.success) {
-          alert("Product successfully added");
+          setProductDetails({
+            name: "",
+            discription: "",
+            image: "",
+            category: "men", // or your default category
+            new_price: "",
+            old_price: "",
+          });
+
+          setImages([]); // if you're using a separate `images` state
+
+          setLoading(false);
         } else {
           alert("Failed to add product");
         }
@@ -98,7 +137,9 @@ const AddProduct = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <div className="spinner"></div>
+  ) : (
     <div className="add-product">
       <div className="addproduct-itemfield">
         <p>Product title</p>

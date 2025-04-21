@@ -77,7 +77,7 @@ const Orders = () => {
                             <div className="cartitems-format cartitem-format-main">
                               <img
                                 className="carticon-product-icon"
-                                src={product.image}
+                                src={product.image[0]}
                                 alt={product.name}
                               />
                               <p>{product.name}</p>

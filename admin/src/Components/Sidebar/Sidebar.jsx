@@ -33,7 +33,7 @@ const Sidebar = () => {
       </Link>
 
       <Link to={"/orders"} style={{ textDecoration: "none" }}>
-        <div className="sidebar-item">
+        <div className="sidebar-item orderbtn">
           <img src={list_product_icon} alt="" />
           <p>My Orders </p>
         </div>
