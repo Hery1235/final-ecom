@@ -1,6 +1,6 @@
 import React from "react";
 import "./Sidebar.css";
-import add_product from "../../Assets/Product_cart.svg";
+import add_product from "../../Assets/Product_Cart.svg";
 import { Link } from "react-router-dom";
 import list_product_icon from "../../Assets/Product_list_icon.svg";
 
